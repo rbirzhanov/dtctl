@@ -684,6 +684,7 @@ DTCTL_PROFILE=query dtctl commands
 | `full` | Everything (the default; today's behavior) |
 | `query` | `query`, `get analyzers`, `describe analyzer`, `exec analyzer`, `verify analyzer` |
 | `investigate` | `query`, `logs`, `get`, `find`, `describe` |
+| `service` | The command surface of a service that embeds dtctl: `query`, the `get`/`describe`/`create`/`update`/`delete` resources it manages, `apply`, `diff`, `history`, `restore`, `share`, `exec api` and a few more. Everything else, including the host-local commands (`auth`, `config`, `ctx`, `doctor`, ...), is masked. The full list is `sdk/session/profile_service.go`. |
 
 Profile names are deliberately **topical**, never permission words like
 `readonly` -- that axis belongs to safety levels (see below). If a profile should

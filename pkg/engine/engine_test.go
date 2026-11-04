@@ -303,6 +303,42 @@ func TestExecute_ProfileMasksSurface(t *testing.T) {
 	require.Contains(t, string(res.Stdout), `"code":"profile_blocked"`)
 }
 
+// TestExecute_ServiceProfile: the built-in "service" profile, selected per
+// request, refuses what the service does not permit with the stable
+// profile_blocked code and without a platform call, runs an allowed command
+// through its alias like the full name, and lists exactly its own surface in
+// the catalog.
+func TestExecute_ServiceProfile(t *testing.T) {
+	env := newMockEnv(t)
+	run := func(command string) *engine.Result {
+		t.Helper()
+		res, err := engine.Execute(context.Background(), engine.Request{
+			Command: command, EnvironmentURL: env.URL, Token: "t", Profile: "service",
+		})
+		require.NoError(t, err)
+		return res
+	}
+
+	for _, command := range []string{"exec dql 'fetch logs' --agent", "update settings x --agent"} {
+		res := run(command)
+		require.NotZero(t, res.ExitCode, command)
+		require.Contains(t, string(res.Stdout), `"code":"profile_blocked"`, command)
+	}
+	env.mu.Lock()
+	require.Empty(t, env.authSeen, "a refused command must not reach the platform")
+	env.mu.Unlock()
+
+	// "bkt" is an alias of "buckets": it runs like the full name.
+	res := run("get bkt --plain")
+	require.Zero(t, res.ExitCode, string(res.Stderr))
+	require.Contains(t, string(res.Stdout), "engine_bucket")
+
+	catalog := run("commands -o json")
+	require.Zero(t, catalog.ExitCode, string(catalog.Stderr))
+	require.Contains(t, string(catalog.Stdout), "workflows")
+	require.NotContains(t, string(catalog.Stdout), "breakpoint")
+}
+
 // TestExecute_ContextCancelledBeforeStart: a request whose context is already
 // done never runs.
 func TestExecute_ContextCancelledBeforeStart(t *testing.T) {

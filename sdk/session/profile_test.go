@@ -127,12 +127,39 @@ func TestResolveProfile_Unknown(t *testing.T) {
 
 func TestProfileExists(t *testing.T) {
 	cfg := &Config{Profiles: map[string]Profile{"custom": {}}}
-	for _, name := range []string{"full", "query", "investigate", "custom"} {
+	for _, name := range []string{"full", "query", "investigate", serviceProfile, "custom"} {
 		if !cfg.ProfileExists(name) {
 			t.Errorf("ProfileExists(%q) = false, want true", name)
 		}
 	}
 	if cfg.ProfileExists("bogus") {
 		t.Error("ProfileExists(bogus) = true, want false")
+	}
+}
+
+// TestServicePreset: the preset resolves, and its list is sorted and free of
+// duplicates, so a reviewer sees one line per change.
+func TestServicePreset(t *testing.T) {
+	p, err := (&Config{}).resolveProfile(serviceProfile)
+	if err != nil || p == nil {
+		t.Fatalf("resolveProfile(%q) = %+v, %v", serviceProfile, p, err)
+	}
+	if p.Name != serviceProfile || p.Description == "" {
+		t.Errorf("preset not populated: %+v", p)
+	}
+	for i := 1; i < len(p.Commands); i++ {
+		if p.Commands[i-1] >= p.Commands[i] {
+			t.Errorf("commands not strictly sorted at %q, %q", p.Commands[i-1], p.Commands[i])
+		}
+	}
+	for _, blocked := range []string{"auth login", "config", "exec dql", "get snapshots"} {
+		if p.Allows(blocked) {
+			t.Errorf("Allows(%q) = true", blocked)
+		}
+	}
+	for _, allowed := range []string{"query", "get buckets", "exec api", "open intent", "commands howto"} {
+		if !p.Allows(allowed) {
+			t.Errorf("Allows(%q) = false", allowed)
+		}
 	}
 }

@@ -62,6 +62,10 @@ var builtinProfiles = map[string]Profile{
 		Description: "Read-only incident triage: query, logs, and resource discovery",
 		Commands:    []string{"query", "logs", "get", "find", "describe", "inventory"},
 	},
+	serviceProfile: {
+		Description: "Command surface of a service that embeds dtctl (see profile_service.go)",
+		Commands:    serviceCommands,
+	},
 }
 
 // BuiltinProfileNames returns the sorted names of the built-in presets (excluding

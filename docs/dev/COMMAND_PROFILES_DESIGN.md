@@ -250,6 +250,28 @@ safety level on the context -- the preset itself never encodes permission.
 | `full` | Everything (default; today's behavior) |
 | `query` | `query`, `get analyzers`, `describe analyzer`, `exec analyzer`, `verify analyzer` |
 | `investigate` | `query`, `logs`, `get`, `find`, `describe` |
+| `service` | The surface of a service that embeds dtctl (see below) |
+
+#### The `service` preset
+
+An embedded service resolves profiles against a synthetic config, so it cannot
+use user-defined profiles; only built-in presets can be selected through
+`engine.Request.Profile`. An embedding service therefore gets a built-in preset,
+so it sends only a name instead of keeping a second allowlist next to dtctl's.
+
+- The list lives in `sdk/session/profile_service.go`, leaf paths only (an
+  entry admits its whole subtree, so a parent such as `exec` would admit every
+  present and future subcommand; parents stay reachable as ancestors).
+- The service's own decision is `cmd/testdata/service_surface.txt`.
+  `TestServiceProfileMatchesTheService` compares it with the surface the
+  profile resolves to on the real command tree: a new dtctl command stays
+  blocked and fails the test until someone decides, and a renamed or removed
+  listed command fails it too.
+- It grants `exec api`, which no general-purpose preset does
+  (`TestNoBuiltinProfileGrantsTheEscapeHatch` keeps an explicit, reasoned
+  exemption). The safety level still gates it.
+- To extend: add the path to both files in one change. A further service with a
+  different surface gets its own preset file and test, named for its role.
 
 User-defined profiles are standalone; there is no inheritance from presets. If you
 want a variant, copy the list -- profiles are short by design.

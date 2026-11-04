@@ -103,6 +103,9 @@ func TestNoBuiltinProfileGrantsTheEscapeHatch(t *testing.T) {
 	env := newMockEnvironmentAt(t, "readonly")
 
 	for _, name := range names {
+		if _, ok := presetsNamingExecAPI[name]; ok {
+			continue // pinned below
+		}
 		code, out, errOut := runAPI(t, []string{
 			"exec", "api", "/platform/widget/v1/widgets", "--agent",
 		}, RunOptions{Env: map[string]string{"DTCTL_PROFILE": name}})
@@ -121,6 +124,26 @@ func TestNoBuiltinProfileGrantsTheEscapeHatch(t *testing.T) {
 
 	require.Zero(t, env.requestCount(),
 		"a masked command must be refused before it can reach the environment")
+
+	// An exemption must stay true: the preset exists and names `exec api`
+	// itself, so a stale entry cannot keep a preset out of the check above.
+	for name := range presetsNamingExecAPI {
+		require.Contains(t, names, name, "exemption for a preset that no longer exists")
+		t.Setenv(config.ProfileEnvVar, name)
+		p, err := (&config.Config{}).ResolveProfile()
+		require.NoError(t, err)
+		require.Contains(t, p.Commands, "exec api",
+			"exemption for %q, but it no longer lists `exec api` explicitly", name)
+	}
+}
+
+// presetsNamingExecAPI are the presets that grant `exec api` by name, with the
+// reason. It is not a general-purpose preset's decision: a service whose own
+// allowlist includes it asks for it explicitly, and its safety gate (derived
+// from the API's specification) still applies. Never add a preset here for
+// convenience, and never to shorten its entry to the bare `exec` verb.
+var presetsNamingExecAPI = map[string]string{
+	"service": "the embedding service's own allowlist permits `exec api`",
 }
 
 // TestGetAndDescribeAPIsSurviveARestrictedProfile is the other half: discovery is

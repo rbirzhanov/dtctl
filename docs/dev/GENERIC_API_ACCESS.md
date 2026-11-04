@@ -283,9 +283,12 @@ design pushes callers away from it at four points:
    preferred route.
 3. **The help text says it.** "If you find yourself scripting against it, that API
    wants a native command instead."
-4. **No profile grants it.** Neither builtin profile (`query`, `investigate`)
-   includes it; a profiled caller gets `profile_blocked`.
-   `TestNoBuiltinProfileGrantsTheEscapeHatch` pins that.
+4. **No general-purpose profile grants it.** Neither `query` nor `investigate`
+   includes it; a profiled caller gets `profile_blocked`. The one exception is
+   `service`, a preset for embedding services whose own allowlist names `exec api`
+   explicitly; its safety gate still applies.
+   `TestNoBuiltinProfileGrantsTheEscapeHatch` pins both (the exemption is an
+   explicit, reasoned map that fails if it goes stale).
 
 `get apis --uncovered` is the constructive half of the same principle: it turns
 the gap between the platform and dtctl into a contribution backlog. It filters to

@@ -1,0 +1,207 @@
+apply
+apply extension-config
+create
+create anomaly-detector
+create aws
+create aws connection
+create aws monitoring
+create azure
+create azure connection
+create azure monitoring
+create bucket
+create dashboard
+create document
+create edgeconnect
+create extension
+create gcp
+create gcp connection
+create gcp monitoring
+create lookup
+create notebook
+create scheduling-rule
+create segment
+create settings
+create slo
+create workflow
+delete
+delete anomaly-detector
+delete app
+delete aws
+delete aws connection
+delete aws monitoring
+delete azure
+delete azure connection
+delete azure monitoring
+delete bucket
+delete dashboard
+delete document
+delete edgeconnect
+delete gcp
+delete gcp connection
+delete gcp monitoring
+delete lookup
+delete notebook
+delete notification
+delete scheduling-rule
+delete segment
+delete settings
+delete slo
+delete trash
+delete workflow
+describe
+describe analyzer
+describe anomaly-detector
+describe api
+describe app
+describe aws
+describe aws connection
+describe aws monitoring
+describe azure
+describe azure connection
+describe azure monitoring
+describe bucket
+describe dashboard
+describe document
+describe edgeconnect
+describe environment
+describe extension
+describe extension-config
+describe function
+describe gcp
+describe gcp connection
+describe gcp monitoring
+describe group
+describe hub-extensions
+describe intent
+describe license
+describe lookup
+describe notebook
+describe scheduling-rule
+describe segment
+describe settings
+describe settings-schema
+describe slo
+describe trash
+describe user
+describe workflow
+describe workflow-execution
+diff
+disable
+disable aws
+disable aws monitoring
+disable azure
+disable azure monitoring
+disable gcp
+disable gcp monitoring
+download
+download extension
+enable
+enable aws
+enable aws monitoring
+enable azure
+enable azure monitoring
+enable gcp
+enable gcp monitoring
+exec
+exec analyzer
+exec api
+exec copilot
+exec copilot document-search
+exec copilot dql2nl
+exec copilot nl2dql
+exec function
+exec preview-processor
+exec slo
+find
+find intents
+get
+get analyzers
+get anomaly-detectors
+get apis
+get apps
+get aws
+get aws connections
+get aws monitoring
+get aws monitoring-feature-sets
+get aws monitoring-regions
+get azure
+get azure connections
+get azure monitoring
+get azure monitoring-feature-sets
+get azure monitoring-locations
+get buckets
+get copilot-skills
+get dashboards
+get documents
+get edgeconnects
+get environment
+get extension-configs
+get extensions
+get functions
+get gcp
+get gcp connections
+get gcp connections principal
+get gcp monitoring
+get gcp monitoring-feature-sets
+get gcp monitoring-locations
+get groups
+get hub-extension-releases
+get hub-extensions
+get intents
+get license
+get license-settings
+get lookups
+get notebooks
+get notifications
+get scheduling-rules
+get sdk-versions
+get segments
+get settings
+get settings-schemas
+get slo-templates
+get slos
+get trash
+get users
+get wfe-task-result
+get workflow-executions
+get workflows
+history
+history dashboard
+history document
+history notebook
+history workflow
+open
+open intent
+query
+restore
+restore dashboard
+restore document
+restore notebook
+restore trash
+restore workflow
+share
+share dashboard
+share document
+share notebook
+translate
+translate classic-pipelines
+translate lql-to-dql
+unshare
+unshare dashboard
+unshare document
+unshare notebook
+update
+update aws
+update aws monitoring
+update azure
+update document
+update extension
+update extensions
+update gcp
+verify
+verify analyzer
+verify openpipeline-dql-processor
+verify openpipeline-matcher
+verify query
+wait
+wait query
